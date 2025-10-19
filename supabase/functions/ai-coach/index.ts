@@ -104,8 +104,9 @@ ${context}`,
     });
   } catch (error) {
     console.error("Error in ai-coach:", error);
+    const errorMessage = error instanceof Error ? error.message : "An error occurred";
     return new Response(
-      JSON.stringify({ error: error.message || "An error occurred" }),
+      JSON.stringify({ error: errorMessage }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
