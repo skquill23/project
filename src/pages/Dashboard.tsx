@@ -1,0 +1,130 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
+import { LogOut, Activity, TrendingUp, MessageSquare, User as UserIcon } from "lucide-react";
+import NutritionTracker from "@/components/dashboard/NutritionTracker";
+import AICoach from "@/components/dashboard/AICoach";
+import ProfileSetup from "@/components/dashboard/ProfileSetup";
+import WorkoutRecommendations from "@/components/dashboard/WorkoutRecommendations";
+
+const Dashboard = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [hasProfile, setHasProfile] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        navigate("/auth");
+        return;
+      }
+
+      setUser(session.user);
+
+      // Check if user has a profile
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", session.user.id)
+        .maybeSingle();
+
+      setHasProfile(!!profile);
+      setLoading(false);
+    };
+
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        navigate("/auth");
+      } else {
+        setUser(session.user);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    toast.success("Signed out successfully");
+    navigate("/auth");
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!hasProfile) {
+    return <ProfileSetup userId={user?.id || ""} onComplete={() => setHasProfile(true)} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="border-b bg-card">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Activity className="w-6 h-6 text-primary" />
+            <h1 className="text-2xl font-bold">FitTrack AI</h1>
+          </div>
+          <Button variant="ghost" onClick={handleSignOut}>
+            <LogOut className="w-4 h-4 mr-2" />
+            Sign Out
+          </Button>
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8">
+        <Tabs defaultValue="tracker" className="w-full">
+          <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsTrigger value="tracker">
+              <Activity className="w-4 h-4 mr-2" />
+              Tracker
+            </TabsTrigger>
+            <TabsTrigger value="workouts">
+              <TrendingUp className="w-4 h-4 mr-2" />
+              Workouts
+            </TabsTrigger>
+            <TabsTrigger value="coach">
+              <MessageSquare className="w-4 h-4 mr-2" />
+              AI Coach
+            </TabsTrigger>
+            <TabsTrigger value="profile">
+              <UserIcon className="w-4 h-4 mr-2" />
+              Profile
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="tracker" className="space-y-6">
+            <NutritionTracker userId={user?.id || ""} />
+          </TabsContent>
+
+          <TabsContent value="workouts" className="space-y-6">
+            <WorkoutRecommendations userId={user?.id || ""} />
+          </TabsContent>
+
+          <TabsContent value="coach" className="space-y-6">
+            <AICoach userId={user?.id || ""} />
+          </TabsContent>
+
+          <TabsContent value="profile" className="space-y-6">
+            <ProfileSetup userId={user?.id || ""} onComplete={() => toast.success("Profile updated!")} />
+          </TabsContent>
+        </Tabs>
+      </main>
+    </div>
+  );
+};
+
+export default Dashboard;
