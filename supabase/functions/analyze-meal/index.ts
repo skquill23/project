@@ -11,10 +11,10 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { mealDescription } = await req.json();
+    const { mealDescription, imageBase64 } = await req.json();
 
-    if (!mealDescription) {
-      throw new Error("Meal description is required");
+    if (!mealDescription && !imageBase64) {
+      throw new Error("Meal description or image is required");
     }
 
     // Get user from auth header
@@ -43,18 +43,10 @@ Deno.serve(async (req) => {
     }
 
     // Call Lovable AI to analyze the meal
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${Deno.env.get("LOVABLE_API_KEY")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          {
-            role: "system",
-            content: `You are a nutrition expert. Analyze the meal description and return ONLY a JSON object with this exact format:
+    const messages: any[] = [
+      {
+        role: "system",
+        content: `You are a nutrition expert. Analyze the meal and return ONLY a JSON object with this exact format:
 {
   "calories": <number>,
   "protein_g": <number>,
@@ -63,12 +55,43 @@ Deno.serve(async (req) => {
   "meal_type": "<breakfast|lunch|dinner|snack>"
 }
 Be accurate and provide realistic estimates. Do not include any other text.`,
+      },
+    ];
+
+    if (imageBase64) {
+      // If image is provided, use vision model
+      messages.push({
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: mealDescription ? `Analyze this meal image. Additional context: ${mealDescription}` : "Analyze this meal image and identify all food items visible.",
           },
           {
-            role: "user",
-            content: `Analyze this meal: ${mealDescription}`,
+            type: "image_url",
+            image_url: {
+              url: `data:image/jpeg;base64,${imageBase64}`,
+            },
           },
         ],
+      });
+    } else {
+      // Text-only analysis
+      messages.push({
+        role: "user",
+        content: `Analyze this meal: ${mealDescription}`,
+      });
+    }
+
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${Deno.env.get("LOVABLE_API_KEY")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: messages,
       }),
     });
 

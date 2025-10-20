@@ -5,11 +5,12 @@ import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { LogOut, Activity, TrendingUp, MessageSquare, User as UserIcon } from "lucide-react";
+import { LogOut, Activity, TrendingUp, MessageSquare, User as UserIcon, BookOpen } from "lucide-react";
 import NutritionTracker from "@/components/dashboard/NutritionTracker";
 import AICoach from "@/components/dashboard/AICoach";
 import ProfileSetup from "@/components/dashboard/ProfileSetup";
 import WorkoutRecommendations from "@/components/dashboard/WorkoutRecommendations";
+import WellnessArticles from "@/components/dashboard/WellnessArticles";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -87,7 +88,7 @@ const Dashboard = () => {
 
       <main className="container mx-auto px-4 py-8">
         <Tabs defaultValue="tracker" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
+          <TabsList className="grid w-full grid-cols-5 mb-8">
             <TabsTrigger value="tracker">
               <Activity className="w-4 h-4 mr-2" />
               Tracker
@@ -95,6 +96,10 @@ const Dashboard = () => {
             <TabsTrigger value="workouts">
               <TrendingUp className="w-4 h-4 mr-2" />
               Workouts
+            </TabsTrigger>
+            <TabsTrigger value="wellness">
+              <BookOpen className="w-4 h-4 mr-2" />
+              Wellness
             </TabsTrigger>
             <TabsTrigger value="coach">
               <MessageSquare className="w-4 h-4 mr-2" />
@@ -112,6 +117,10 @@ const Dashboard = () => {
 
           <TabsContent value="workouts" className="space-y-6">
             <WorkoutRecommendations userId={user?.id || ""} />
+          </TabsContent>
+
+          <TabsContent value="wellness" className="space-y-6">
+            <WellnessArticles />
           </TabsContent>
 
           <TabsContent value="coach" className="space-y-6">

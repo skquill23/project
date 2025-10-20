@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Loader2, Plus, Utensils } from "lucide-react";
+import { Loader2, Plus, Utensils, Camera, X } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 
 interface NutritionTrackerProps {
@@ -17,6 +17,9 @@ const NutritionTracker = ({ userId }: NutritionTrackerProps) => {
   const [analyzing, setAnalyzing] = useState(false);
   const [todayData, setTodayData] = useState<any>(null);
   const [calorieTarget, setCalorieTarget] = useState(2000);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     loadTodayData();
@@ -54,19 +57,63 @@ const NutritionTracker = ({ userId }: NutritionTrackerProps) => {
     });
   };
 
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5242880) {
+        toast.error("Image must be less than 5MB");
+        return;
+      }
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const clearImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   const analyzeMeal = async () => {
-    if (!mealInput.trim()) return;
+    if (!mealInput.trim() && !selectedImage) {
+      toast.error("Please describe your meal or upload an image");
+      return;
+    }
 
     setAnalyzing(true);
     try {
+      let imageBase64 = null;
+      
+      if (selectedImage) {
+        const reader = new FileReader();
+        imageBase64 = await new Promise<string>((resolve) => {
+          reader.onloadend = () => {
+            const base64 = reader.result as string;
+            resolve(base64.split(',')[1]); // Remove data:image/jpeg;base64, prefix
+          };
+          reader.readAsDataURL(selectedImage);
+        });
+      }
+
       const { data, error } = await supabase.functions.invoke("analyze-meal", {
-        body: { mealDescription: mealInput },
+        body: { 
+          mealDescription: mealInput,
+          imageBase64: imageBase64
+        },
       });
 
       if (error) throw error;
 
       toast.success("Meal logged successfully!");
       setMealInput("");
+      clearImage();
       await loadTodayData();
     } catch (error: any) {
       toast.error(error.message || "Failed to analyze meal");
@@ -96,20 +143,54 @@ const NutritionTracker = ({ userId }: NutritionTrackerProps) => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex gap-2">
-            <Input
-              placeholder="e.g., Grilled chicken breast with rice and vegetables"
-              value={mealInput}
-              onChange={(e) => setMealInput(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && analyzeMeal()}
-            />
-            <Button onClick={analyzeMeal} disabled={analyzing}>
-              {analyzing ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Plus className="w-4 h-4" />
-              )}
-            </Button>
+          <div className="space-y-3">
+            <div className="flex gap-2">
+              <Input
+                placeholder="e.g., Grilled chicken breast with rice and vegetables"
+                value={mealInput}
+                onChange={(e) => setMealInput(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && !selectedImage && analyzeMeal()}
+              />
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                onChange={handleImageSelect}
+                className="hidden"
+              />
+              <Button
+                variant="outline"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={analyzing}
+              >
+                <Camera className="w-4 h-4" />
+              </Button>
+              <Button onClick={analyzeMeal} disabled={analyzing}>
+                {analyzing ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Plus className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
+            
+            {imagePreview && (
+              <div className="relative">
+                <img
+                  src={imagePreview}
+                  alt="Meal preview"
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+                <Button
+                  variant="destructive"
+                  size="icon"
+                  className="absolute top-2 right-2"
+                  onClick={clearImage}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
