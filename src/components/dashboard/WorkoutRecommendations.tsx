@@ -900,21 +900,23 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
                   </div>
 
                   <div className="space-y-2 pt-2">
-                    <a 
-                      href={exercise.videoUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
+                    <Button
+                      variant="outline"
                       className="w-full"
+                      onClick={() => {
+                        const link = document.createElement('a');
+                        link.href = exercise.videoUrl;
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                      }}
                     >
-                      <Button
-                        variant="outline"
-                        className="w-full"
-                      >
-                        <Play className="w-4 h-4 mr-2" />
-                        Watch Tutorial
-                        <ExternalLink className="w-3 h-3 ml-2" />
-                      </Button>
-                    </a>
+                      <Play className="w-4 h-4 mr-2" />
+                      Watch Tutorial
+                      <ExternalLink className="w-3 h-3 ml-2" />
+                    </Button>
                     
                     <Button
                       className="w-full"

@@ -102,11 +102,22 @@ const NutritionTracker = ({ userId }: NutritionTrackerProps) => {
         });
       }
 
+      // Get the current session to ensure we have a valid token
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !sessionData.session) {
+        toast.error("Please log in again");
+        return;
+      }
+
       const { data, error } = await supabase.functions.invoke("analyze-meal", {
         body: { 
           mealDescription: mealInput,
           imageBase64: imageBase64
         },
+        headers: {
+          Authorization: `Bearer ${sessionData.session.access_token}`
+        }
       });
 
       if (error) throw error;
@@ -116,6 +127,7 @@ const NutritionTracker = ({ userId }: NutritionTrackerProps) => {
       clearImage();
       await loadTodayData();
     } catch (error: any) {
+      console.error("Meal analysis error:", error);
       toast.error(error.message || "Failed to analyze meal");
     } finally {
       setAnalyzing(false);
@@ -139,7 +151,7 @@ const NutritionTracker = ({ userId }: NutritionTrackerProps) => {
             AI Meal Logger
           </CardTitle>
           <CardDescription>
-            Describe your meal (e.g., "2 eggs, 1 toast, coffee") or upload a photo, and AI will analyze the nutrition automatically
+            Simply type what you ate (e.g., "2 eggs, 1 toast, coffee") or upload a photo. AI will automatically calculate calories and macros - no need to search a database!
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
