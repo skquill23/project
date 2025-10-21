@@ -146,14 +146,20 @@ const WellnessArticles = () => {
                       {article.summary}
                     </p>
                     
-                    <Button
-                      variant="outline"
-                      className="w-full"
-                      onClick={() => window.open(article.url, '_blank')}
+                    <a 
+                      href={article.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="w-full block"
                     >
-                      Read Full Article
-                      <ExternalLink className="w-4 h-4 ml-2" />
-                    </Button>
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                      >
+                        Read Full Article
+                        <ExternalLink className="w-4 h-4 ml-2" />
+                      </Button>
+                    </a>
                   </CardContent>
                 </Card>
               ))}

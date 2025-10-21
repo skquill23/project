@@ -136,17 +136,17 @@ const NutritionTracker = ({ userId }: NutritionTrackerProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Utensils className="w-5 h-5" />
-            Daily Nutrition Tracker
+            AI Meal Logger
           </CardTitle>
           <CardDescription>
-            Describe your meal and AI will automatically log the nutrition
+            Describe your meal (e.g., "2 eggs, 1 toast, coffee") or upload a photo, and AI will analyze the nutrition automatically
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-3">
             <div className="flex gap-2">
               <Input
-                placeholder="e.g., Grilled chicken breast with rice and vegetables"
+                placeholder="e.g., 2 scrambled eggs, 2 toast slices, 1 banana, coffee with milk"
                 value={mealInput}
                 onChange={(e) => setMealInput(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && !selectedImage && analyzeMeal()}

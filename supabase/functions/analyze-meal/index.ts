@@ -46,15 +46,24 @@ Deno.serve(async (req) => {
     const messages: any[] = [
       {
         role: "system",
-        content: `You are a nutrition expert. Analyze the meal and return ONLY a JSON object with this exact format:
+        content: `You are an expert nutritionist and food analyst. Analyze the meal description or image and provide highly accurate nutritional estimates based on standard food databases (USDA, nutritionix).
+
+Return ONLY a valid JSON object with this exact structure:
 {
-  "calories": <number>,
-  "protein_g": <number>,
-  "carbs_g": <number>,
-  "fats_g": <number>,
-  "meal_type": "<breakfast|lunch|dinner|snack>"
+  "calories": number (total kcal),
+  "protein_g": number (grams),
+  "carbs_g": number (grams),
+  "fats_g": number (grams),
+  "meal_type": "breakfast/lunch/dinner/snack"
 }
-Be accurate and provide realistic estimates. Do not include any other text.`,
+
+Critical instructions:
+- Be highly accurate with calorie and macro estimates based on standard portion sizes
+- If quantities/portions are specified (e.g., "2 eggs", "1 cup rice"), use exact measurements
+- If no quantity specified, assume standard serving sizes
+- Break down composite meals into individual components for accuracy
+- For meal_type, intelligently determine from the foods: breakfast (eggs, toast, cereal), lunch (sandwiches, salads), dinner (heavier proteins, full meals), snack (light items)
+- Return ONLY the JSON object, no markdown, no explanations`,
       },
     ];
 
