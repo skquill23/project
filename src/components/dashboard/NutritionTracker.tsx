@@ -102,21 +102,10 @@ const NutritionTracker = ({ userId }: NutritionTrackerProps) => {
         });
       }
 
-      // Get the current session to ensure we have a valid token
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError || !sessionData.session) {
-        toast.error("Please log in again");
-        return;
-      }
-
       const { data, error } = await supabase.functions.invoke("analyze-meal", {
         body: { 
           mealDescription: mealInput,
           imageBase64: imageBase64
-        },
-        headers: {
-          Authorization: `Bearer ${sessionData.session.access_token}`
         }
       });
 
