@@ -1,25 +1,27 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Loader2, Plus, Utensils, Camera, X } from "lucide-react";
+import { Loader2, Plus, Utensils, Search } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
+import { Badge } from "@/components/ui/badge";
 
 interface NutritionTrackerProps {
   userId: string;
 }
 
 const NutritionTracker = ({ userId }: NutritionTrackerProps) => {
-  const [mealInput, setMealInput] = useState("");
-  const [analyzing, setAnalyzing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searching, setSearching] = useState(false);
   const [todayData, setTodayData] = useState<any>(null);
   const [calorieTarget, setCalorieTarget] = useState(2000);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFood, setSelectedFood] = useState<any>(null);
+  const [quantity, setQuantity] = useState("1");
+  const [logging, setLogging] = useState(false);
 
   useEffect(() => {
     loadTodayData();
@@ -57,69 +59,119 @@ const NutritionTracker = ({ userId }: NutritionTrackerProps) => {
     });
   };
 
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5242880) {
-        toast.error("Image must be less than 5MB");
-        return;
-      }
-      setSelectedImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const clearImage = () => {
-    setSelectedImage(null);
-    setImagePreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
-  const analyzeMeal = async () => {
-    if (!mealInput.trim() && !selectedImage) {
-      toast.error("Please describe your meal or upload an image");
+  const searchFoods = async (query: string) => {
+    if (!query.trim()) {
+      setSearchResults([]);
       return;
     }
 
-    setAnalyzing(true);
+    setSearching(true);
     try {
-      let imageBase64 = null;
-      
-      if (selectedImage) {
-        const reader = new FileReader();
-        imageBase64 = await new Promise<string>((resolve) => {
-          reader.onloadend = () => {
-            const base64 = reader.result as string;
-            resolve(base64.split(',')[1]); // Remove data:image/jpeg;base64, prefix
-          };
-          reader.readAsDataURL(selectedImage);
+      const { data, error } = await supabase
+        .from("foods")
+        .select("*")
+        .ilike("name", `%${query}%`)
+        .limit(10);
+
+      if (error) throw error;
+      setSearchResults(data || []);
+    } catch (error: any) {
+      console.error("Search error:", error);
+      toast.error("Failed to search foods");
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+    if (value.length >= 2) {
+      searchFoods(value);
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  const selectFood = (food: any) => {
+    setSelectedFood(food);
+    setQuantity("1");
+    setSearchResults([]);
+    setSearchQuery("");
+  };
+
+  const logMeal = async () => {
+    if (!selectedFood) {
+      toast.error("Please select a food");
+      return;
+    }
+
+    const qty = parseFloat(quantity);
+    if (isNaN(qty) || qty <= 0) {
+      toast.error("Please enter a valid quantity");
+      return;
+    }
+
+    setLogging(true);
+    try {
+      const calories = Math.round(selectedFood.calories * qty);
+      const protein = selectedFood.protein_g * qty;
+      const carbs = selectedFood.carbs_g * qty;
+      const fats = selectedFood.fats_g * qty;
+
+      const { error: mealError } = await supabase.from("meals").insert({
+        user_id: userId,
+        food_id: selectedFood.id,
+        meal_description: `${qty} x ${selectedFood.serving_size} ${selectedFood.serving_unit} ${selectedFood.name}`,
+        calories,
+        protein_g: protein,
+        carbs_g: carbs,
+        fats_g: fats,
+        quantity: qty,
+      });
+
+      if (mealError) throw mealError;
+
+      const today = new Date().toISOString().split("T")[0];
+      const { data: existingSummary } = await supabase
+        .from("daily_nutrition_summary")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("date", today)
+        .maybeSingle();
+
+      if (existingSummary) {
+        await supabase
+          .from("daily_nutrition_summary")
+          .update({
+            total_calories: existingSummary.total_calories + calories,
+            total_protein_g: existingSummary.total_protein_g + protein,
+            total_carbs_g: existingSummary.total_carbs_g + carbs,
+            total_fats_g: existingSummary.total_fats_g + fats,
+            meals_count: existingSummary.meals_count + 1,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", existingSummary.id);
+      } else {
+        await supabase.from("daily_nutrition_summary").insert({
+          user_id: userId,
+          date: today,
+          total_calories: calories,
+          total_protein_g: protein,
+          total_carbs_g: carbs,
+          total_fats_g: fats,
+          meals_count: 1,
         });
       }
 
-      const { data, error } = await supabase.functions.invoke("analyze-meal", {
-        body: { 
-          mealDescription: mealInput,
-          imageBase64: imageBase64
-        }
-      });
-
-      if (error) throw error;
-
       toast.success("Meal logged successfully!");
-      setMealInput("");
-      clearImage();
+      setSelectedFood(null);
+      setQuantity("1");
       await loadTodayData();
     } catch (error: any) {
-      console.error("Meal analysis error:", error);
-      toast.error(error.message || "Failed to analyze meal");
+      console.error("Log meal error:", error);
+      toast.error(error.message || "Failed to log meal");
     } finally {
-      setAnalyzing(false);
+      setLogging(false);
     }
   };
 
@@ -137,62 +189,117 @@ const NutritionTracker = ({ userId }: NutritionTrackerProps) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Utensils className="w-5 h-5" />
-            AI Meal Logger
+            Food Logger
           </CardTitle>
           <CardDescription>
-            Simply type what you ate (e.g., "2 eggs, 1 toast, coffee") or upload a photo. AI will automatically calculate calories and macros - no need to search a database!
+            Search for foods from our database and log your meals
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-3">
-            <div className="flex gap-2">
-              <Input
-                placeholder="e.g., 2 scrambled eggs, 2 toast slices, 1 banana, coffee with milk"
-                value={mealInput}
-                onChange={(e) => setMealInput(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && !selectedImage && analyzeMeal()}
-              />
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/jpeg,image/jpg,image/png,image/webp"
-                onChange={handleImageSelect}
-                className="hidden"
-              />
-              <Button
-                variant="outline"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={analyzing}
-              >
-                <Camera className="w-4 h-4" />
-              </Button>
-              <Button onClick={analyzeMeal} disabled={analyzing}>
-                {analyzing ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Plus className="w-4 h-4" />
-                )}
-              </Button>
-            </div>
-            
-            {imagePreview && (
-              <div className="relative">
-                <img
-                  src={imagePreview}
-                  alt="Meal preview"
-                  className="w-full h-48 object-cover rounded-lg"
+          {!selectedFood ? (
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Search for food (e.g., chicken, apple, rice)..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
                 />
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  className="absolute top-2 right-2"
-                  onClick={clearImage}
-                >
-                  <X className="w-4 h-4" />
+                <Button variant="outline" disabled>
+                  {searching ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Search className="w-4 h-4" />
+                  )}
                 </Button>
               </div>
-            )}
-          </div>
+
+              {searchResults.length > 0 && (
+                <div className="border rounded-lg divide-y max-h-80 overflow-y-auto">
+                  {searchResults.map((food) => (
+                    <div
+                      key={food.id}
+                      className="p-3 hover:bg-accent cursor-pointer transition-colors"
+                      onClick={() => selectFood(food)}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="space-y-1 flex-1">
+                          <p className="font-medium">{food.name}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {food.serving_size} {food.serving_unit}
+                            {food.brand && ` • ${food.brand}`}
+                          </p>
+                          <div className="flex gap-2 text-xs">
+                            <Badge variant="secondary">{food.calories} cal</Badge>
+                            <Badge variant="outline">P: {food.protein_g}g</Badge>
+                            <Badge variant="outline">C: {food.carbs_g}g</Badge>
+                            <Badge variant="outline">F: {food.fats_g}g</Badge>
+                          </div>
+                        </div>
+                        {food.category && (
+                          <Badge className="ml-2">{food.category}</Badge>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="p-4 border rounded-lg bg-muted/50">
+                <div className="space-y-2">
+                  <p className="font-medium text-lg">{selectedFood.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    Per {selectedFood.serving_size} {selectedFood.serving_unit}
+                  </p>
+                  <div className="flex gap-2 flex-wrap">
+                    <Badge variant="secondary">{selectedFood.calories} cal</Badge>
+                    <Badge variant="outline">P: {selectedFood.protein_g}g</Badge>
+                    <Badge variant="outline">C: {selectedFood.carbs_g}g</Badge>
+                    <Badge variant="outline">F: {selectedFood.fats_g}g</Badge>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">
+                  Number of servings
+                </label>
+                <Input
+                  type="number"
+                  min="0.1"
+                  step="0.1"
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                  placeholder="1"
+                />
+                <p className="text-sm text-muted-foreground">
+                  Total: {Math.round(selectedFood.calories * parseFloat(quantity || "1"))} calories
+                </p>
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setSelectedFood(null)}
+                  disabled={logging}
+                >
+                  Cancel
+                </Button>
+                <Button className="flex-1" onClick={logMeal} disabled={logging}>
+                  {logging ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Log Meal
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 

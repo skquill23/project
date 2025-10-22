@@ -53,17 +53,61 @@ export type Database = {
         }
         Relationships: []
       }
+      foods: {
+        Row: {
+          brand: string | null
+          calories: number
+          carbs_g: number
+          category: string | null
+          created_at: string
+          fats_g: number
+          id: string
+          name: string
+          protein_g: number
+          serving_size: string
+          serving_unit: string
+        }
+        Insert: {
+          brand?: string | null
+          calories: number
+          carbs_g: number
+          category?: string | null
+          created_at?: string
+          fats_g: number
+          id?: string
+          name: string
+          protein_g: number
+          serving_size: string
+          serving_unit: string
+        }
+        Update: {
+          brand?: string | null
+          calories?: number
+          carbs_g?: number
+          category?: string | null
+          created_at?: string
+          fats_g?: number
+          id?: string
+          name?: string
+          protein_g?: number
+          serving_size?: string
+          serving_unit?: string
+        }
+        Relationships: []
+      }
       meals: {
         Row: {
           calories: number | null
           carbs_g: number | null
           created_at: string | null
           fats_g: number | null
+          food_id: string | null
           id: string
           logged_at: string | null
           meal_description: string
           meal_type: string | null
           protein_g: number | null
+          quantity: number | null
           user_id: string
         }
         Insert: {
@@ -71,11 +115,13 @@ export type Database = {
           carbs_g?: number | null
           created_at?: string | null
           fats_g?: number | null
+          food_id?: string | null
           id?: string
           logged_at?: string | null
           meal_description: string
           meal_type?: string | null
           protein_g?: number | null
+          quantity?: number | null
           user_id: string
         }
         Update: {
@@ -83,14 +129,24 @@ export type Database = {
           carbs_g?: number | null
           created_at?: string | null
           fats_g?: number | null
+          food_id?: string | null
           id?: string
           logged_at?: string | null
           meal_description?: string
           meal_type?: string | null
           protein_g?: number | null
+          quantity?: number | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "meals_food_id_fkey"
+            columns: ["food_id"]
+            isOneToOne: false
+            referencedRelation: "foods"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
