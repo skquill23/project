@@ -146,22 +146,20 @@ const WellnessArticles = () => {
                       {article.summary}
                     </p>
                     
-                    <Button
-                      variant="outline"
+                    <a 
+                      href={article.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
                       className="w-full"
-                      onClick={() => {
-                        const link = document.createElement('a');
-                        link.href = article.url;
-                        link.target = '_blank';
-                        link.rel = 'noopener noreferrer';
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                      }}
                     >
-                      Read Full Article
-                      <ExternalLink className="w-4 h-4 ml-2" />
-                    </Button>
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                      >
+                        Read Full Article
+                        <ExternalLink className="w-4 h-4 ml-2" />
+                      </Button>
+                    </a>
                   </CardContent>
                 </Card>
               ))}
