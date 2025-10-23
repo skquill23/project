@@ -146,20 +146,20 @@ const WellnessArticles = () => {
                       {article.summary}
                     </p>
                     
-                    <a 
-                      href={article.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
+                    <Button
+                      variant="outline"
                       className="w-full"
+                      asChild
                     >
-                      <Button
-                        variant="outline"
-                        className="w-full"
+                      <a 
+                        href={article.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
                       >
                         Read Full Article
                         <ExternalLink className="w-4 h-4 ml-2" />
-                      </Button>
-                    </a>
+                      </a>
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
