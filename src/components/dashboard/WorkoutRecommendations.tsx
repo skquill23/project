@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { Dumbbell, CheckCircle2, Clock, ExternalLink, Play, TrendingUp } from "lucide-react";
+import { Dumbbell, CheckCircle2, Clock, TrendingUp } from "lucide-react";
 
 interface Exercise {
   name: string;
@@ -13,7 +13,6 @@ interface Exercise {
   duration: number;
   calories: number;
   description: string;
-  videoUrl: string;
   formTips: string[];
   difficulty: string;
   muscleGroups: string[];
@@ -83,7 +82,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           duration: 15,
           calories: 220,
           description: "High-intensity cardiovascular exercise that burns calories quickly and improves coordination",
-          videoUrl: "https://www.youtube.com/watch?v=FJmRQ5iTXKE",
           formTips: [
             "Keep elbows close to body",
             "Jump on balls of feet, not flat-footed",
@@ -99,7 +97,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           duration: 20,
           calories: 300,
           description: "Full-body explosive exercise combining squat, plank, and jump for maximum calorie burn",
-          videoUrl: "https://www.youtube.com/watch?v=dZgVxmf6jkA",
           formTips: [
             "Land softly when jumping down",
             "Keep core tight in plank position",
@@ -115,7 +112,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           duration: 15,
           calories: 180,
           description: "Dynamic core and cardio exercise that engages multiple muscle groups simultaneously",
-          videoUrl: "https://www.youtube.com/watch?v=nmwgirgXLYM",
           formTips: [
             "Keep hips level with shoulders",
             "Drive knees toward chest quickly",
@@ -126,57 +122,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           muscleGroups: ["Core", "Shoulders", "Legs"]
         },
         {
-          name: "Burpees",
-          type: "Cardio",
-          duration: 15,
-          calories: 200,
-          difficulty: "Intermediate",
-          muscleGroups: ["Full Body"],
-          description: "Full-body explosive movement that burns maximum calories in minimal time",
-          videoUrl: "https://www.youtube.com/watch?v=TU8QYVW0gDU",
-          formTips: [
-            "Start in standing position, drop to squat with hands on floor",
-            "Jump feet back to plank position",
-            "Do a push-up, jump feet back to squat",
-            "Explode up jumping with arms overhead",
-            "Land softly and immediately repeat"
-          ]
-        },
-        {
-          name: "Jump Rope",
-          type: "Cardio",
-          duration: 20,
-          calories: 250,
-          difficulty: "Beginner",
-          muscleGroups: ["Calves", "Core"],
-          description: "High-intensity cardio that improves coordination and burns fat efficiently",
-          videoUrl: "https://www.youtube.com/watch?v=FJmRQ5iTXKE",
-          formTips: [
-            "Keep elbows close to body, rotate from wrists not arms",
-            "Jump on balls of feet, land softly",
-            "Maintain upright posture with core engaged",
-            "Start with single jumps, progress to double-unders",
-            "Jump just high enough for rope to pass under feet"
-          ]
-        },
-        {
-          name: "Mountain Climbers",
-          type: "Cardio",
-          duration: 15,
-          calories: 180,
-          difficulty: "Beginner",
-          muscleGroups: ["Core", "Shoulders"],
-          description: "Dynamic cardio exercise that strengthens core while burning calories",
-          videoUrl: "https://www.youtube.com/watch?v=nmwgirgXLYM",
-          formTips: [
-            "Start in high plank position with hands under shoulders",
-            "Bring one knee toward chest, then quickly switch legs",
-            "Keep hips level and core tight throughout",
-            "Breathe rhythmically, don't hold your breath",
-            "Increase speed as you improve form"
-          ]
-        },
-        {
           name: "High Knees",
           type: "Cardio",
           duration: 10,
@@ -184,7 +129,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           difficulty: "Beginner",
           muscleGroups: ["Legs", "Core"],
           description: "Running in place while bringing knees to hip level for cardio conditioning",
-          videoUrl: "https://www.youtube.com/watch?v=8opcQdC-V-U",
           formTips: [
             "Stand tall, lift knees to hip height alternately",
             "Pump arms in running motion",
@@ -201,7 +145,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           difficulty: "Advanced",
           muscleGroups: ["Legs", "Glutes"],
           description: "Explosive lower body movement that builds power and burns calories",
-          videoUrl: "https://www.youtube.com/watch?v=NBY9-kTuHEk",
           formTips: [
             "Start with box at knee height or lower",
             "Jump explosively onto box landing softly",
@@ -216,7 +159,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           duration: 30,
           calories: 350,
           description: "Low-impact full-body cardio that's easy on joints while burning significant calories",
-          videoUrl: "https://www.youtube.com/watch?v=5HLW2AI1Ozk",
           formTips: [
             "Keep body horizontal in water",
             "Breathe rhythmically every 2-3 strokes",
@@ -232,7 +174,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           duration: 45,
           calories: 400,
           description: "Excellent low-impact cardio for fat burning and leg strengthening",
-          videoUrl: "https://www.youtube.com/watch?v=mKdx0j7xvuA",
           formTips: [
             "Keep knees aligned with feet",
             "Maintain slight bend in elbows",
@@ -248,7 +189,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           duration: 20,
           calories: 280,
           description: "Full-body cardio combining upper and lower body for maximum calorie burn",
-          videoUrl: "https://www.youtube.com/watch?v=zQ82RYIFLN8",
           formTips: [
             "Push with legs first, then pull with arms",
             "Keep back straight throughout motion",
@@ -259,28 +199,11 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           muscleGroups: ["Full Body", "Back", "Legs", "Core"]
         },
         {
-          name: "Box Jumps",
-          type: "Plyometric",
-          duration: 15,
-          calories: 200,
-          description: "Explosive lower body exercise for power and calorie burning",
-          videoUrl: "https://www.youtube.com/watch?v=NBY9-kTuHEk",
-          formTips: [
-            "Land softly with bent knees",
-            "Start with lower box height",
-            "Fully extend hips at top",
-            "Step down, don't jump down"
-          ],
-          difficulty: "Intermediate",
-          muscleGroups: ["Quads", "Glutes", "Calves"]
-        },
-        {
           name: "Kettlebell Swings",
           type: "Strength",
           duration: 15,
           calories: 220,
           description: "Dynamic hip-hinge movement combining cardio and strength training",
-          videoUrl: "https://www.youtube.com/watch?v=YSxHifyI6s8",
           formTips: [
             "Hinge at hips, not squat",
             "Drive through heels powerfully",
@@ -298,7 +221,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           duration: 30,
           calories: 250,
           description: "The king of leg exercises - builds overall lower body mass and strength",
-          videoUrl: "https://www.youtube.com/watch?v=ultWZbUMPL8",
           formTips: [
             "Bar should rest on upper traps, not neck",
             "Descend until thighs are parallel or below",
@@ -315,7 +237,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           duration: 25,
           calories: 200,
           description: "Primary chest builder - fundamental upper body pushing exercise",
-          videoUrl: "https://www.youtube.com/watch?v=rT7DgCr-3pg",
           formTips: [
             "Retract shoulder blades throughout",
             "Lower bar to mid-chest area",
@@ -327,40 +248,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           muscleGroups: ["Chest", "Triceps", "Shoulders"]
         },
         {
-          name: "Barbell Bench Press",
-          type: "Strength",
-          duration: 20,
-          calories: 120,
-          difficulty: "Intermediate",
-          muscleGroups: ["Chest", "Triceps", "Shoulders"],
-          description: "Compound movement for building upper body strength and chest mass",
-          videoUrl: "https://www.youtube.com/watch?v=rT7DgCr-3pg",
-          formTips: [
-            "Lie on bench with feet flat on floor",
-            "Grip bar slightly wider than shoulder width",
-            "Lower bar to mid-chest with elbows at 45 degrees",
-            "Press up explosively until arms fully extended",
-            "Keep shoulder blades retracted throughout"
-          ]
-        },
-        {
-          name: "Barbell Squats",
-          type: "Strength",
-          duration: 25,
-          calories: 180,
-          difficulty: "Intermediate",
-          muscleGroups: ["Quads", "Glutes", "Core"],
-          description: "King of leg exercises for building lower body mass and strength",
-          videoUrl: "https://www.youtube.com/watch?v=ultWZbUMPL8",
-          formTips: [
-            "Bar rests on upper back, feet shoulder-width apart",
-            "Descend by pushing hips back and bending knees",
-            "Go to parallel or slightly below",
-            "Keep chest up, knees tracking over toes",
-            "Drive through heels to stand back up"
-          ]
-        },
-        {
           name: "Deadlifts",
           type: "Strength",
           duration: 20,
@@ -368,7 +255,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           difficulty: "Advanced",
           muscleGroups: ["Back", "Hamstrings", "Glutes"],
           description: "Total body strength builder targeting posterior chain muscles",
-          videoUrl: "https://www.youtube.com/watch?v=op9kVnSso6Q",
           formTips: [
             "Stand with feet hip-width, bar over mid-foot",
             "Grip bar just outside legs, shins touch bar",
@@ -385,7 +271,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           difficulty: "Advanced",
           muscleGroups: ["Back", "Biceps"],
           description: "Bodyweight exercise for building back width and arm strength",
-          videoUrl: "https://www.youtube.com/watch?v=eGo4IYlbE5g",
           formTips: [
             "Hang from bar with overhand grip, hands shoulder-width",
             "Pull yourself up until chin clears bar",
@@ -402,7 +287,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           difficulty: "Intermediate",
           muscleGroups: ["Shoulders", "Triceps"],
           description: "Compound shoulder exercise for building upper body strength",
-          videoUrl: "https://www.youtube.com/watch?v=QAQ64hK4Xxs",
           formTips: [
             "Start with bar at shoulder height, grip shoulder-width",
             "Press bar overhead until arms fully extended",
@@ -419,7 +303,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           difficulty: "Beginner",
           muscleGroups: ["Back", "Biceps"],
           description: "Unilateral back exercise for muscle development and strength",
-          videoUrl: "https://www.youtube.com/watch?v=roCP6wCXPqo",
           formTips: [
             "Place one knee and hand on bench for support",
             "Hold dumbbell in opposite hand, let it hang",
@@ -434,7 +317,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           duration: 20,
           calories: 180,
           description: "Targets hamstrings and glutes with hip-hinge movement pattern",
-          videoUrl: "https://www.youtube.com/watch?v=2SHsk9AzdjA",
           formTips: [
             "Keep knees slightly bent throughout",
             "Hinge at hips, push glutes back",
@@ -446,258 +328,66 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           muscleGroups: ["Hamstrings", "Glutes", "Lower Back"]
         },
         {
-          name: "Overhead Press",
+          name: "Dips",
           type: "Strength",
-          duration: 20,
-          calories: 160,
-          description: "Builds shoulder mass and overall upper body strength",
-          videoUrl: "https://www.youtube.com/watch?v=2yjwXTZQDDI",
+          duration: 12,
+          calories: 90,
+          description: "Compound pushing exercise for chest and triceps development",
           formTips: [
-            "Start bar at collarbone level",
-            "Press straight up, not forward",
-            "Squeeze glutes for stability",
-            "Push head through at top",
-            "Keep core braced throughout"
+            "Start at top with arms fully extended",
+            "Lean forward for chest emphasis or upright for triceps",
+            "Lower until upper arms are parallel to floor",
+            "Press back up explosively",
+            "Keep shoulders down and back"
           ],
           difficulty: "Intermediate",
-          muscleGroups: ["Shoulders", "Triceps", "Upper Chest"]
-        },
-        {
-          name: "Barbell Row",
-          type: "Strength",
-          duration: 20,
-          calories: 170,
-          description: "Primary back thickness builder - targets middle back and lats",
-          videoUrl: "https://www.youtube.com/watch?v=FWJR5Ve8bnQ",
-          formTips: [
-            "Hinge forward about 45 degrees",
-            "Pull bar to lower chest/upper abs",
-            "Keep elbows close to body",
-            "Squeeze shoulder blades at top",
-            "Control the descent"
-          ],
-          difficulty: "Intermediate",
-          muscleGroups: ["Lats", "Rhomboids", "Traps", "Biceps"]
-        },
-        {
-          name: "Bulgarian Split Squat",
-          type: "Strength",
-          duration: 20,
-          calories: 180,
-          description: "Unilateral leg exercise for balanced development and stability",
-          videoUrl: "https://www.youtube.com/watch?v=2C-uNgKwPLE",
-          formTips: [
-            "Front foot should be far enough forward",
-            "Keep torso upright",
-            "Lower until back knee nearly touches ground",
-            "Drive through front heel",
-            "Use dumbbells for balance"
-          ],
-          difficulty: "Intermediate",
-          muscleGroups: ["Quads", "Glutes", "Hamstrings"]
-        },
-        {
-          name: "Lat Pulldown",
-          type: "Strength",
-          duration: 15,
-          calories: 140,
-          description: "Builds lat width and prepares for pull-ups",
-          videoUrl: "https://www.youtube.com/watch?v=CAwf7n6Luuc",
-          formTips: [
-            "Pull bar to upper chest, not behind neck",
-            "Lean back slightly (15-20 degrees)",
-            "Drive elbows down and back",
-            "Squeeze lats at bottom",
-            "Control the weight up slowly"
-          ],
-          difficulty: "Beginner",
-          muscleGroups: ["Lats", "Biceps", "Rear Delts"]
-        },
-        {
-          name: "Dumbbell Chest Press",
-          type: "Strength",
-          duration: 20,
-          calories: 160,
-          description: "Allows greater range of motion than barbell for chest development",
-          videoUrl: "https://www.youtube.com/watch?v=VmB1G1K7v94",
-          formTips: [
-            "Lower dumbbells to chest level",
-            "Keep elbows at 45-degree angle",
-            "Press up and slightly together",
-            "Don't lock out completely at top",
-            "Maintain control throughout"
-          ],
-          difficulty: "Beginner",
           muscleGroups: ["Chest", "Triceps", "Shoulders"]
         },
         {
-          name: "Leg Press",
+          name: "Barbell Rows",
           type: "Strength",
-          duration: 15,
-          calories: 180,
-          description: "Quad-focused exercise with lower back support",
-          videoUrl: "https://www.youtube.com/watch?v=IZxyjW7MPJQ",
+          duration: 18,
+          calories: 130,
+          description: "Fundamental back exercise for thickness and strength",
           formTips: [
-            "Place feet shoulder-width apart",
-            "Lower until knees reach 90 degrees",
-            "Don't let lower back lift off pad",
-            "Push through heels and mid-foot",
-            "Don't lock knees at top"
-          ],
-          difficulty: "Beginner",
-          muscleGroups: ["Quads", "Glutes", "Hamstrings"]
-        },
-        {
-          name: "Cable Flyes",
-          type: "Isolation",
-          duration: 15,
-          calories: 120,
-          description: "Isolates chest muscles for definition and pump",
-          videoUrl: "https://www.youtube.com/watch?v=Iwe6AmxVf7o",
-          formTips: [
-            "Slight forward lean from hips",
-            "Keep slight bend in elbows (constant)",
-            "Bring hands together at center",
-            "Focus on chest squeeze",
-            "Control the stretch phase"
-          ],
-          difficulty: "Beginner",
-          muscleGroups: ["Chest"]
-        },
-        {
-          name: "Tricep Dips",
-          type: "Bodyweight",
-          duration: 15,
-          calories: 140,
-          description: "Compound tricep exercise for arm mass",
-          videoUrl: "https://www.youtube.com/watch?v=6kALZikXxLc",
-          formTips: [
-            "Keep elbows tucked, not flared",
-            "Lean forward slightly for chest emphasis",
-            "Lower until arms are 90 degrees",
-            "Push through palms to extend",
-            "Use assistance machine if needed"
+            "Hinge at hips, back at 45 degrees",
+            "Pull bar to lower chest/upper abs",
+            "Keep elbows close to body",
+            "Squeeze shoulder blades together at top",
+            "Control the weight on descent"
           ],
           difficulty: "Intermediate",
-          muscleGroups: ["Triceps", "Chest", "Shoulders"]
-        },
-        {
-          name: "Bicep Curls (Barbell/Dumbbell)",
-          type: "Isolation",
-          duration: 15,
-          calories: 100,
-          description: "Primary bicep builder for arm size",
-          videoUrl: "https://www.youtube.com/watch?v=ykJmrZ5v0Oo",
-          formTips: [
-            "Keep elbows stationary at sides",
-            "Don't swing or use momentum",
-            "Fully extend arms at bottom",
-            "Squeeze biceps at top",
-            "Control the descent (eccentric)"
-          ],
-          difficulty: "Beginner",
-          muscleGroups: ["Biceps", "Forearms"]
-        },
-        {
-          name: "Face Pulls",
-          type: "Isolation",
-          duration: 15,
-          calories: 110,
-          description: "Essential for shoulder health and rear delt development",
-          videoUrl: "https://www.youtube.com/watch?v=rep-qVOkqgk",
-          formTips: [
-            "Pull rope to face level",
-            "Externally rotate shoulders at end",
-            "Keep elbows high throughout",
-            "Squeeze shoulder blades together",
-            "Use lighter weight, focus on form"
-          ],
-          difficulty: "Beginner",
-          muscleGroups: ["Rear Delts", "Traps", "Rhomboids"]
-        },
-        {
-          name: "Leg Curls",
-          type: "Isolation",
-          duration: 15,
-          calories: 120,
-          description: "Isolates hamstrings for balanced leg development",
-          videoUrl: "https://www.youtube.com/watch?v=1Tq3QdYUuHs",
-          formTips: [
-            "Keep hips pressed to pad",
-            "Curl heels toward glutes",
-            "Squeeze at top of movement",
-            "Control the weight down slowly",
-            "Don't lift hips off pad"
-          ],
-          difficulty: "Beginner",
-          muscleGroups: ["Hamstrings"]
-        },
-        {
-          name: "Calf Raises",
-          type: "Isolation",
-          duration: 15,
-          calories: 100,
-          description: "Builds calf muscle size and strength",
-          videoUrl: "https://www.youtube.com/watch?v=JbyjNymZocE",
-          formTips: [
-            "Full range of motion (stretch to full flexion)",
-            "Pause at top for 1 second",
-            "Control the descent, don't drop",
-            "Keep knees slightly bent",
-            "Can do seated or standing variation"
-          ],
-          difficulty: "Beginner",
-          muscleGroups: ["Calves"]
+          muscleGroups: ["Back", "Biceps", "Core"]
         }
       ],
       maintenance: [
         {
-          name: "Bodyweight Squats",
-          type: "Bodyweight",
-          duration: 15,
-          calories: 140,
-          description: "Fundamental lower body movement using only bodyweight",
-          videoUrl: "https://www.youtube.com/watch?v=aclHkVaku9U",
-          formTips: [
-            "Feet shoulder-width apart",
-            "Keep chest up, core engaged",
-            "Descend until thighs parallel",
-            "Weight on heels and mid-foot",
-            "Can extend arms forward for balance"
-          ],
-          difficulty: "Beginner",
-          muscleGroups: ["Quads", "Glutes", "Core"]
-        },
-        {
           name: "Push-Ups",
-          type: "Strength",
+          type: "Bodyweight",
           duration: 10,
-          calories: 80,
+          calories: 75,
           difficulty: "Beginner",
           muscleGroups: ["Chest", "Triceps", "Core"],
-          description: "Classic bodyweight exercise for upper body strength maintenance",
-          videoUrl: "https://www.youtube.com/watch?v=IODxDxX7oi4",
+          description: "Classic bodyweight exercise for upper body strength and endurance",
           formTips: [
-            "Start in high plank, hands shoulder-width apart",
-            "Lower body as one unit until chest near floor",
-            "Keep elbows at 45-degree angle to body",
-            "Push back up to starting position",
-            "Maintain straight line from head to heels"
+            "Hands slightly wider than shoulder-width apart",
+            "Keep body in straight line from head to heels",
+            "Lower chest to just above ground",
+            "Push back up while engaging core",
+            "Modify on knees if needed"
           ]
         },
         {
-          name: "Bodyweight Squats",
-          type: "Strength",
+          name: "Squats (Bodyweight)",
+          type: "Bodyweight",
           duration: 12,
-          calories: 90,
+          calories: 85,
           difficulty: "Beginner",
-          muscleGroups: ["Legs", "Glutes"],
-          description: "Fundamental lower body movement for maintaining leg strength",
-          videoUrl: "https://www.youtube.com/watch?v=xqvCmoLULNY",
+          muscleGroups: ["Legs", "Glutes", "Core"],
+          description: "Fundamental lower body exercise for strength and mobility",
           formTips: [
-            "Stand with feet shoulder-width apart",
-            "Lower by pushing hips back and bending knees",
-            "Go as deep as comfortable while maintaining form",
+            "Feet shoulder-width apart, toes slightly out",
+            "Send hips back first, then bend knees",
             "Keep chest up and weight on heels",
             "Stand back up, squeezing glutes at top"
           ]
@@ -710,7 +400,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           difficulty: "Beginner",
           muscleGroups: ["Core", "Shoulders"],
           description: "Isometric core exercise for stability and strength",
-          videoUrl: "https://www.youtube.com/watch?v=ASdvN_XEl_c",
           formTips: [
             "Start in forearm plank position",
             "Keep body in straight line from head to heels",
@@ -727,7 +416,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           difficulty: "Beginner",
           muscleGroups: ["Legs", "Glutes"],
           description: "Unilateral leg exercise for balance and functional strength",
-          videoUrl: "https://www.youtube.com/watch?v=QOVaHwm-Q6U",
           formTips: [
             "Step forward with one leg, lower back knee toward floor",
             "Front knee should be at 90 degrees over ankle",
@@ -744,7 +432,6 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
           difficulty: "Beginner",
           muscleGroups: ["Full Body"],
           description: "Gentle flowing movements to improve flexibility and reduce stress",
-          videoUrl: "https://www.youtube.com/watch?v=v7AYKMP6rOE",
           formTips: [
             "Follow sun salutation sequence: mountain to forward fold",
             "Transition through plank, cobra, downward dog",
@@ -835,7 +522,7 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
             Exercise Library
           </CardTitle>
           <CardDescription>
-            Select exercises to build your custom workout split. Each exercise includes form tips and video demonstrations.
+            Select exercises to build your custom workout split with form tips for each exercise.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -899,31 +586,13 @@ const WorkoutRecommendations = ({ userId }: WorkoutRecommendationsProps) => {
                     </ul>
                   </div>
 
-                  <div className="space-y-2 pt-2">
-                    <a 
-                      href={exercise.videoUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="w-full block"
-                    >
-                      <Button
-                        variant="outline"
-                        className="w-full"
-                      >
-                        <Play className="w-4 h-4 mr-2" />
-                        Watch Tutorial
-                        <ExternalLink className="w-3 h-3 ml-2" />
-                      </Button>
-                    </a>
-                    
-                    <Button
-                      className="w-full"
-                      onClick={() => logWorkout(exercise)}
-                    >
-                      <CheckCircle2 className="w-4 h-4 mr-2" />
-                      Complete Workout
-                    </Button>
-                  </div>
+                  <Button
+                    className="w-full"
+                    onClick={() => logWorkout(exercise)}
+                  >
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                    Complete Workout
+                  </Button>
                 </CardContent>
               </Card>
             ))}
