@@ -5,15 +5,18 @@ import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { LogOut, Activity, TrendingUp, MessageSquare, User as UserIcon, BookOpen } from "lucide-react";
+import { LogOut, Activity, TrendingUp, MessageSquare, User as UserIcon, BookOpen, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import NutritionTracker from "@/components/dashboard/NutritionTracker";
 import AICoach from "@/components/dashboard/AICoach";
 import ProfileSetup from "@/components/dashboard/ProfileSetup";
 import WorkoutRecommendations from "@/components/dashboard/WorkoutRecommendations";
 import WellnessArticles from "@/components/dashboard/WellnessArticles";
+import StreakTracker from "@/components/dashboard/StreakTracker";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { theme, setTheme } = useTheme();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
@@ -79,14 +82,29 @@ const Dashboard = () => {
             <Activity className="w-6 h-6 text-primary" />
             <h1 className="text-2xl font-bold">FitTrack AI</h1>
           </div>
-          <Button variant="ghost" onClick={handleSignOut}>
-            <LogOut className="w-4 h-4 mr-2" />
-            Sign Out
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            >
+              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="sr-only">Toggle theme</span>
+            </Button>
+            <Button variant="ghost" onClick={handleSignOut}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <StreakTracker userId={user?.id || ""} />
+        </div>
+        
         <Tabs defaultValue="tracker" className="w-full">
           <TabsList className="grid w-full grid-cols-5 mb-8">
             <TabsTrigger value="tracker">
