@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { toast } from "sonner";
 import {
   LogOut, Activity, TrendingUp, MessageSquare, User as UserIcon,
-  BookOpen, Moon, Sun, Menu, BarChart3, Zap,
+  BookOpen, Moon, Sun, Menu, BarChart3, Zap, Trophy,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import NutritionTracker from "@/components/dashboard/NutritionTracker";
@@ -18,6 +18,9 @@ import WorkoutRecommendations from "@/components/dashboard/WorkoutRecommendation
 import WellnessArticles from "@/components/dashboard/WellnessArticles";
 import StreakTracker from "@/components/dashboard/StreakTracker";
 import ProgressCharts from "@/components/dashboard/ProgressCharts";
+import GamificationTab from "@/components/dashboard/GamificationTab";
+import XPBar from "@/components/dashboard/XPBar";
+import { useGamification } from "@/hooks/useGamification";
 
 const Dashboard = () => {
   const navigate = useNavigate();
