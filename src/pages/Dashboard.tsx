@@ -209,7 +209,7 @@ const Dashboard = () => {
           </TabsContent>
 
           <TabsContent value="workouts" className="space-y-6">
-            <WorkoutRecommendations userId={user?.id || ""} />
+            <WorkoutRecommendations userId={userId} />
           </TabsContent>
 
           <TabsContent value="wellness" className="space-y-6">
@@ -217,11 +217,11 @@ const Dashboard = () => {
           </TabsContent>
 
           <TabsContent value="coach" className="space-y-6">
-            <AICoach userId={user?.id || ""} />
+            <AICoach userId={userId} />
           </TabsContent>
 
           <TabsContent value="profile" className="space-y-6">
-            <ProfileSetup userId={user?.id || ""} onComplete={() => toast.success("Profile updated!")} />
+            <ProfileSetup userId={userId} onComplete={() => toast.success("Profile updated!")} />
           </TabsContent>
         </Tabs>
       </main>
