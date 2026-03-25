@@ -188,11 +188,24 @@ const Dashboard = () => {
           </TabsList>
 
           <TabsContent value="insights" className="space-y-6">
-            <ProgressCharts userId={user?.id || ""} />
+            <ProgressCharts userId={userId} />
+          </TabsContent>
+
+          <TabsContent value="rewards" className="space-y-6">
+            <GamificationTab
+              xp={gamification.xp}
+              level={gamification.level}
+              achievements={gamification.achievements}
+              unlockedAchievements={gamification.unlockedAchievements}
+              dailyChallenges={gamification.dailyChallenges}
+              onRefreshChallenges={gamification.refreshChallenges}
+              onCheckAchievements={gamification.checkAndUnlockAchievements}
+              loading={gamification.loading}
+            />
           </TabsContent>
 
           <TabsContent value="tracker" className="space-y-6">
-            <NutritionTracker userId={user?.id || ""} />
+            <NutritionTracker userId={userId} />
           </TabsContent>
 
           <TabsContent value="workouts" className="space-y-6">
