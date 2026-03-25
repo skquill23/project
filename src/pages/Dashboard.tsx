@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { toast } from "sonner";
-import { LogOut, Activity, TrendingUp, MessageSquare, User as UserIcon, BookOpen, Moon, Sun, Menu } from "lucide-react";
+import {
+  LogOut, Activity, TrendingUp, MessageSquare, User as UserIcon,
+  BookOpen, Moon, Sun, Menu, BarChart3, Zap,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import NutritionTracker from "@/components/dashboard/NutritionTracker";
 import AICoach from "@/components/dashboard/AICoach";
@@ -14,6 +17,7 @@ import ProfileSetup from "@/components/dashboard/ProfileSetup";
 import WorkoutRecommendations from "@/components/dashboard/WorkoutRecommendations";
 import WellnessArticles from "@/components/dashboard/WellnessArticles";
 import StreakTracker from "@/components/dashboard/StreakTracker";
+import ProgressCharts from "@/components/dashboard/ProgressCharts";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -21,11 +25,12 @@ const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
+  const [profileName, setProfileName] = useState("");
 
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      
+
       if (!session) {
         navigate("/auth");
         return;
@@ -33,7 +38,6 @@ const Dashboard = () => {
 
       setUser(session.user);
 
-      // Check if user has a profile
       const { data: profile } = await supabase
         .from("profiles")
         .select("*")
@@ -41,6 +45,7 @@ const Dashboard = () => {
         .maybeSingle();
 
       setHasProfile(!!profile);
+      setProfileName(profile?.full_name || "");
       setLoading(false);
     };
 
@@ -63,10 +68,20 @@ const Dashboard = () => {
     navigate("/auth");
   };
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-3">
+          <Activity className="w-10 h-10 text-primary animate-pulse" />
+          <p className="text-muted-foreground">Loading your dashboard...</p>
+        </div>
       </div>
     );
   }
@@ -77,16 +92,22 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Activity className="w-6 h-6 text-primary" />
-            <h1 className="text-2xl font-bold">FitTrack AI</h1>
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-md">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Zap className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold leading-tight">FitTrack AI</h1>
+              <p className="text-xs text-muted-foreground hidden sm:block">Your intelligent fitness companion</p>
+            </div>
           </div>
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="h-6 w-6" />
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
             <SheetContent>
@@ -95,7 +116,7 @@ const Dashboard = () => {
               </SheetHeader>
               <div className="mt-6 space-y-6">
                 <div className="space-y-3">
-                  <h3 className="text-sm font-medium">Theme</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Theme</h3>
                   <Button
                     variant="outline"
                     className="w-full justify-start"
@@ -103,12 +124,12 @@ const Dashboard = () => {
                   >
                     <Sun className="h-4 w-4 mr-2 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                     <Moon className="absolute h-4 w-4 ml-2 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                    <span className="ml-6">Toggle theme</span>
+                    <span className="ml-6">{theme === "dark" ? "Switch to Light" : "Switch to Dark"}</span>
                   </Button>
                 </div>
 
                 <div className="space-y-3">
-                  <h3 className="text-sm font-medium">Your Streaks</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Your Streaks</h3>
                   <StreakTracker userId={user?.id || ""} />
                 </div>
 
@@ -124,30 +145,42 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="tracker" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 mb-8">
-            <TabsTrigger value="tracker">
-              <Activity className="w-4 h-4 mr-2" />
-              Tracker
-            </TabsTrigger>
-            <TabsTrigger value="workouts">
-              <TrendingUp className="w-4 h-4 mr-2" />
-              Workouts
-            </TabsTrigger>
-            <TabsTrigger value="wellness">
-              <BookOpen className="w-4 h-4 mr-2" />
-              Wellness
-            </TabsTrigger>
-            <TabsTrigger value="coach">
-              <MessageSquare className="w-4 h-4 mr-2" />
-              AI Coach
-            </TabsTrigger>
-            <TabsTrigger value="profile">
-              <UserIcon className="w-4 h-4 mr-2" />
-              Profile
-            </TabsTrigger>
+      <main className="container mx-auto px-4 py-6 space-y-6">
+        {/* Welcome Banner */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/15 via-primary/5 to-transparent border p-6 md:p-8">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+          <div className="relative">
+            <p className="text-sm font-medium text-primary">{getGreeting()}</p>
+            <h2 className="text-2xl md:text-3xl font-bold mt-1">
+              {profileName || "Champion"} 💪
+            </h2>
+            <p className="text-muted-foreground mt-1 text-sm max-w-md">
+              Track your nutrition, crush workouts, and watch your progress unfold. Every day is a step closer to your goals.
+            </p>
+          </div>
+        </div>
+
+        {/* Main Tabs */}
+        <Tabs defaultValue="insights" className="w-full">
+          <TabsList className="grid w-full grid-cols-6 mb-6 h-auto p-1">
+            {[
+              { value: "insights", icon: BarChart3, label: "Insights" },
+              { value: "tracker", icon: Activity, label: "Tracker" },
+              { value: "workouts", icon: TrendingUp, label: "Workouts" },
+              { value: "wellness", icon: BookOpen, label: "Wellness" },
+              { value: "coach", icon: MessageSquare, label: "AI Coach" },
+              { value: "profile", icon: UserIcon, label: "Profile" },
+            ].map((tab) => (
+              <TabsTrigger key={tab.value} value={tab.value} className="flex flex-col sm:flex-row items-center gap-1 py-2 text-xs sm:text-sm">
+                <tab.icon className="w-4 h-4" />
+                <span className="hidden sm:inline">{tab.label}</span>
+              </TabsTrigger>
+            ))}
           </TabsList>
+
+          <TabsContent value="insights" className="space-y-6">
+            <ProgressCharts userId={user?.id || ""} />
+          </TabsContent>
 
           <TabsContent value="tracker" className="space-y-6">
             <NutritionTracker userId={user?.id || ""} />
