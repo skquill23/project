@@ -109,6 +109,9 @@ const Dashboard = () => {
               <p className="text-xs text-muted-foreground hidden sm:block">Your intelligent fitness companion</p>
             </div>
           </div>
+          <div className="hidden sm:block">
+            <XPBar xp={gamification.xp} level={gamification.level} />
+          </div>
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full">
