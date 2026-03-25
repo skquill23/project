@@ -29,6 +29,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
   const [profileName, setProfileName] = useState("");
+  const userId = user?.id || "";
+  const gamification = useGamification(userId);
 
   useEffect(() => {
     const checkAuth = async () => {
