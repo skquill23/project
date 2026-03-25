@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { toast } from "sonner";
 import {
   LogOut, Activity, TrendingUp, MessageSquare, User as UserIcon,
-  BookOpen, Moon, Sun, Menu, BarChart3, Zap,
+  BookOpen, Moon, Sun, Menu, BarChart3, Zap, Trophy,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import NutritionTracker from "@/components/dashboard/NutritionTracker";
@@ -18,6 +18,9 @@ import WorkoutRecommendations from "@/components/dashboard/WorkoutRecommendation
 import WellnessArticles from "@/components/dashboard/WellnessArticles";
 import StreakTracker from "@/components/dashboard/StreakTracker";
 import ProgressCharts from "@/components/dashboard/ProgressCharts";
+import GamificationTab from "@/components/dashboard/GamificationTab";
+import XPBar from "@/components/dashboard/XPBar";
+import { useGamification } from "@/hooks/useGamification";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -26,6 +29,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
   const [profileName, setProfileName] = useState("");
+  const userId = user?.id || "";
+  const gamification = useGamification(userId);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -104,6 +109,9 @@ const Dashboard = () => {
               <p className="text-xs text-muted-foreground hidden sm:block">Your intelligent fitness companion</p>
             </div>
           </div>
+          <div className="hidden sm:block">
+            <XPBar xp={gamification.xp} level={gamification.level} />
+          </div>
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full">
@@ -162,9 +170,10 @@ const Dashboard = () => {
 
         {/* Main Tabs */}
         <Tabs defaultValue="insights" className="w-full">
-          <TabsList className="grid w-full grid-cols-6 mb-6 h-auto p-1">
+          <TabsList className="grid w-full grid-cols-7 mb-6 h-auto p-1">
             {[
               { value: "insights", icon: BarChart3, label: "Insights" },
+              { value: "rewards", icon: Trophy, label: "Rewards" },
               { value: "tracker", icon: Activity, label: "Tracker" },
               { value: "workouts", icon: TrendingUp, label: "Workouts" },
               { value: "wellness", icon: BookOpen, label: "Wellness" },
@@ -179,15 +188,28 @@ const Dashboard = () => {
           </TabsList>
 
           <TabsContent value="insights" className="space-y-6">
-            <ProgressCharts userId={user?.id || ""} />
+            <ProgressCharts userId={userId} />
+          </TabsContent>
+
+          <TabsContent value="rewards" className="space-y-6">
+            <GamificationTab
+              xp={gamification.xp}
+              level={gamification.level}
+              achievements={gamification.achievements}
+              unlockedAchievements={gamification.unlockedAchievements}
+              dailyChallenges={gamification.dailyChallenges}
+              onRefreshChallenges={gamification.refreshChallenges}
+              onCheckAchievements={gamification.checkAndUnlockAchievements}
+              loading={gamification.loading}
+            />
           </TabsContent>
 
           <TabsContent value="tracker" className="space-y-6">
-            <NutritionTracker userId={user?.id || ""} />
+            <NutritionTracker userId={userId} />
           </TabsContent>
 
           <TabsContent value="workouts" className="space-y-6">
-            <WorkoutRecommendations userId={user?.id || ""} />
+            <WorkoutRecommendations userId={userId} />
           </TabsContent>
 
           <TabsContent value="wellness" className="space-y-6">
@@ -195,11 +217,11 @@ const Dashboard = () => {
           </TabsContent>
 
           <TabsContent value="coach" className="space-y-6">
-            <AICoach userId={user?.id || ""} />
+            <AICoach userId={userId} />
           </TabsContent>
 
           <TabsContent value="profile" className="space-y-6">
-            <ProfileSetup userId={user?.id || ""} onComplete={() => toast.success("Profile updated!")} />
+            <ProfileSetup userId={userId} onComplete={() => toast.success("Profile updated!")} />
           </TabsContent>
         </Tabs>
       </main>
