@@ -327,6 +327,54 @@ export type Database = {
         }
         Relationships: []
       }
+      wellness_logs: {
+        Row: {
+          created_at: string
+          energy_level: number | null
+          id: string
+          log_date: string
+          mood_score: number | null
+          motivation_score: number | null
+          notes: string | null
+          sleep_hours: number | null
+          sleep_quality: number | null
+          stress_level: number | null
+          tags: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          energy_level?: number | null
+          id?: string
+          log_date?: string
+          mood_score?: number | null
+          motivation_score?: number | null
+          notes?: string | null
+          sleep_hours?: number | null
+          sleep_quality?: number | null
+          stress_level?: number | null
+          tags?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          energy_level?: number | null
+          id?: string
+          log_date?: string
+          mood_score?: number | null
+          motivation_score?: number | null
+          notes?: string | null
+          sleep_hours?: number | null
+          sleep_quality?: number | null
+          stress_level?: number | null
+          tags?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       workout_exercises: {
         Row: {
           created_at: string
