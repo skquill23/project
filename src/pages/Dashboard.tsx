@@ -15,7 +15,7 @@ import NutritionTracker from "@/components/dashboard/NutritionTracker";
 import AICoach from "@/components/dashboard/AICoach";
 import ProfileSetup from "@/components/dashboard/ProfileSetup";
 import WorkoutRecommendations from "@/components/dashboard/WorkoutRecommendations";
-import WellnessArticles from "@/components/dashboard/WellnessArticles";
+import MentalWellnessTab from "@/components/dashboard/MentalWellnessTab";
 import StreakTracker from "@/components/dashboard/StreakTracker";
 import ProgressCharts from "@/components/dashboard/ProgressCharts";
 import GamificationTab from "@/components/dashboard/GamificationTab";
@@ -176,7 +176,7 @@ const Dashboard = () => {
               { value: "rewards", icon: Trophy, label: "Rewards" },
               { value: "tracker", icon: Activity, label: "Tracker" },
               { value: "workouts", icon: TrendingUp, label: "Workouts" },
-              { value: "wellness", icon: BookOpen, label: "Wellness" },
+              { value: "wellness", icon: BookOpen, label: "Mind" },
               { value: "coach", icon: MessageSquare, label: "AI Coach" },
               { value: "profile", icon: UserIcon, label: "Profile" },
             ].map((tab) => (
@@ -213,7 +213,7 @@ const Dashboard = () => {
           </TabsContent>
 
           <TabsContent value="wellness" className="space-y-6">
-            <WellnessArticles />
+            <MentalWellnessTab userId={userId} />
           </TabsContent>
 
           <TabsContent value="coach" className="space-y-6">
