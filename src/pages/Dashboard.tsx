@@ -21,6 +21,8 @@ import ProgressCharts from "@/components/dashboard/ProgressCharts";
 import GamificationTab from "@/components/dashboard/GamificationTab";
 import XPBar from "@/components/dashboard/XPBar";
 import { useGamification } from "@/hooks/useGamification";
+import WaterIntakeTracker from "@/components/dashboard/WaterIntakeTracker";
+import CommunityLeaderboard from "@/components/dashboard/CommunityLeaderboard";
 
 const Dashboard = () => {
   const navigate = useNavigate();
