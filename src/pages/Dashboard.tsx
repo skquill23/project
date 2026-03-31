@@ -179,6 +179,7 @@ const Dashboard = () => {
               { value: "rewards", icon: Trophy, label: "Rewards" },
               { value: "leaderboard", icon: UserIcon, label: "Rankings" },
               { value: "tracker", icon: Activity, label: "Tracker" },
+              { value: "scanner", icon: Camera, label: "AI Scan" },
               { value: "water", icon: Zap, label: "Water" },
               { value: "workouts", icon: TrendingUp, label: "Workouts" },
               { value: "wellness", icon: BookOpen, label: "Mind" },
