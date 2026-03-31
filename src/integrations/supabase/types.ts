@@ -176,6 +176,36 @@ export type Database = {
         }
         Relationships: []
       }
+      leaderboard_profiles: {
+        Row: {
+          avatar_emoji: string
+          created_at: string
+          display_name: string
+          id: string
+          is_visible: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_emoji?: string
+          created_at?: string
+          display_name?: string
+          id?: string
+          is_visible?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_emoji?: string
+          created_at?: string
+          display_name?: string
+          id?: string
+          is_visible?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       meals: {
         Row: {
           calories: number | null
@@ -323,6 +353,30 @@ export type Database = {
           id?: string
           total_xp?: number
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      water_intake: {
+        Row: {
+          amount_ml: number
+          created_at: string
+          id: string
+          logged_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_ml?: number
+          created_at?: string
+          id?: string
+          logged_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_ml?: number
+          created_at?: string
+          id?: string
+          logged_at?: string
           user_id?: string
         }
         Relationships: []

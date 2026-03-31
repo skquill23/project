@@ -21,6 +21,8 @@ import ProgressCharts from "@/components/dashboard/ProgressCharts";
 import GamificationTab from "@/components/dashboard/GamificationTab";
 import XPBar from "@/components/dashboard/XPBar";
 import { useGamification } from "@/hooks/useGamification";
+import WaterIntakeTracker from "@/components/dashboard/WaterIntakeTracker";
+import CommunityLeaderboard from "@/components/dashboard/CommunityLeaderboard";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -170,11 +172,13 @@ const Dashboard = () => {
 
         {/* Main Tabs */}
         <Tabs defaultValue="insights" className="w-full">
-          <TabsList className="grid w-full grid-cols-7 mb-6 h-auto p-1">
+          <TabsList className="grid w-full grid-cols-9 mb-6 h-auto p-1">
             {[
               { value: "insights", icon: BarChart3, label: "Insights" },
               { value: "rewards", icon: Trophy, label: "Rewards" },
+              { value: "leaderboard", icon: UserIcon, label: "Rankings" },
               { value: "tracker", icon: Activity, label: "Tracker" },
+              { value: "water", icon: Zap, label: "Water" },
               { value: "workouts", icon: TrendingUp, label: "Workouts" },
               { value: "wellness", icon: BookOpen, label: "Mind" },
               { value: "coach", icon: MessageSquare, label: "AI Coach" },
@@ -204,8 +208,16 @@ const Dashboard = () => {
             />
           </TabsContent>
 
+          <TabsContent value="leaderboard" className="space-y-6">
+            <CommunityLeaderboard userId={userId} />
+          </TabsContent>
+
           <TabsContent value="tracker" className="space-y-6">
             <NutritionTracker userId={userId} />
+          </TabsContent>
+
+          <TabsContent value="water" className="space-y-6">
+            <WaterIntakeTracker userId={userId} />
           </TabsContent>
 
           <TabsContent value="workouts" className="space-y-6">
