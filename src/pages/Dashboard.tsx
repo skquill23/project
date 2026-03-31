@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { toast } from "sonner";
 import {
   LogOut, Activity, TrendingUp, MessageSquare, User as UserIcon,
-  BookOpen, Moon, Sun, Menu, BarChart3, Zap, Trophy,
+  BookOpen, Moon, Sun, Menu, BarChart3, Zap, Trophy, Camera,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import NutritionTracker from "@/components/dashboard/NutritionTracker";
@@ -23,6 +23,7 @@ import XPBar from "@/components/dashboard/XPBar";
 import { useGamification } from "@/hooks/useGamification";
 import WaterIntakeTracker from "@/components/dashboard/WaterIntakeTracker";
 import CommunityLeaderboard from "@/components/dashboard/CommunityLeaderboard";
+import AIMealScanner from "@/components/dashboard/AIMealScanner";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -172,12 +173,13 @@ const Dashboard = () => {
 
         {/* Main Tabs */}
         <Tabs defaultValue="insights" className="w-full">
-          <TabsList className="grid w-full grid-cols-9 mb-6 h-auto p-1">
+          <TabsList className="grid w-full grid-cols-10 mb-6 h-auto p-1">
             {[
               { value: "insights", icon: BarChart3, label: "Insights" },
               { value: "rewards", icon: Trophy, label: "Rewards" },
               { value: "leaderboard", icon: UserIcon, label: "Rankings" },
               { value: "tracker", icon: Activity, label: "Tracker" },
+              { value: "scanner", icon: Camera, label: "AI Scan" },
               { value: "water", icon: Zap, label: "Water" },
               { value: "workouts", icon: TrendingUp, label: "Workouts" },
               { value: "wellness", icon: BookOpen, label: "Mind" },
@@ -214,6 +216,10 @@ const Dashboard = () => {
 
           <TabsContent value="tracker" className="space-y-6">
             <NutritionTracker userId={userId} />
+          </TabsContent>
+
+          <TabsContent value="scanner" className="space-y-6">
+            <AIMealScanner userId={userId} />
           </TabsContent>
 
           <TabsContent value="water" className="space-y-6">
