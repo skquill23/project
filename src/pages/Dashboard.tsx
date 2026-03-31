@@ -218,6 +218,10 @@ const Dashboard = () => {
             <NutritionTracker userId={userId} />
           </TabsContent>
 
+          <TabsContent value="scanner" className="space-y-6">
+            <AIMealScanner userId={userId} />
+          </TabsContent>
+
           <TabsContent value="water" className="space-y-6">
             <WaterIntakeTracker userId={userId} />
           </TabsContent>
