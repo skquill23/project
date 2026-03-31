@@ -208,8 +208,16 @@ const Dashboard = () => {
             />
           </TabsContent>
 
+          <TabsContent value="leaderboard" className="space-y-6">
+            <CommunityLeaderboard userId={userId} />
+          </TabsContent>
+
           <TabsContent value="tracker" className="space-y-6">
             <NutritionTracker userId={userId} />
+          </TabsContent>
+
+          <TabsContent value="water" className="space-y-6">
+            <WaterIntakeTracker userId={userId} />
           </TabsContent>
 
           <TabsContent value="workouts" className="space-y-6">
