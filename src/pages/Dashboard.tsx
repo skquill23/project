@@ -173,7 +173,7 @@ const Dashboard = () => {
 
         {/* Main Tabs */}
         <Tabs defaultValue="insights" className="w-full">
-          <TabsList className="grid w-full grid-cols-9 mb-6 h-auto p-1">
+          <TabsList className="grid w-full grid-cols-10 mb-6 h-auto p-1">
             {[
               { value: "insights", icon: BarChart3, label: "Insights" },
               { value: "rewards", icon: Trophy, label: "Rewards" },
