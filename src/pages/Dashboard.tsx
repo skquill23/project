@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { toast } from "sonner";
 import {
   LogOut, Activity, TrendingUp, MessageSquare, User as UserIcon,
-  BookOpen, Moon, Sun, Menu, BarChart3, Zap, Trophy, Camera,
+  BookOpen, Moon, Sun, Menu, BarChart3, Zap, Trophy,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import NutritionTracker from "@/components/dashboard/NutritionTracker";
