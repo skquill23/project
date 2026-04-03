@@ -222,7 +222,7 @@ const Dashboard = () => {
           </TabsContent>
 
           <TabsContent value="workouts" className="space-y-6">
-            <WorkoutRecommendations userId={userId} />
+            <WorkoutBuilder userId={userId} />
           </TabsContent>
 
           <TabsContent value="wellness" className="space-y-6">
