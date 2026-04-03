@@ -14,7 +14,7 @@ import { useTheme } from "next-themes";
 import NutritionTracker from "@/components/dashboard/NutritionTracker";
 import AICoach from "@/components/dashboard/AICoach";
 import ProfileSetup from "@/components/dashboard/ProfileSetup";
-import WorkoutRecommendations from "@/components/dashboard/WorkoutRecommendations";
+import WorkoutBuilder from "@/components/dashboard/WorkoutBuilder";
 import MentalWellnessTab from "@/components/dashboard/MentalWellnessTab";
 import StreakTracker from "@/components/dashboard/StreakTracker";
 import ProgressCharts from "@/components/dashboard/ProgressCharts";
