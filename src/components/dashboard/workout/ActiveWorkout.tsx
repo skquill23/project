@@ -27,7 +27,7 @@ const ActiveWorkout = ({ session, sets, onCompleteSet, onFinish, onCancel }: Act
   const [editingSet, setEditingSet] = useState<string | null>(null);
   const [editReps, setEditReps] = useState("");
   const [editWeight, setEditWeight] = useState("");
-  const restIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const restIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const audioRef = useRef<AudioContext | null>(null);
 
   const completedSets = sets.filter(s => s.is_completed).length;
