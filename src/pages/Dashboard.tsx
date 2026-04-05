@@ -215,6 +215,10 @@ const Dashboard = () => {
             <CommunityLeaderboard userId={userId} />
           </TabsContent>
 
+          <TabsContent value="social" className="space-y-6">
+            <SocialChallenges userId={userId} />
+          </TabsContent>
+
           <TabsContent value="tracker" className="space-y-6">
             <NutritionTracker userId={userId} />
           </TabsContent>
