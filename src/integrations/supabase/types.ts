@@ -53,6 +53,36 @@ export type Database = {
         }
         Relationships: []
       }
+      activity_feed: {
+        Row: {
+          activity_type: string
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       daily_challenges: {
         Row: {
           challenge_date: string
@@ -173,6 +203,33 @@ export type Database = {
           protein_g?: number
           serving_size?: string
           serving_unit?: string
+        }
+        Relationships: []
+      }
+      friendships: {
+        Row: {
+          addressee_id: string
+          created_at: string
+          id: string
+          requester_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          addressee_id: string
+          created_at?: string
+          id?: string
+          requester_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          addressee_id?: string
+          created_at?: string
+          id?: string
+          requester_id?: string
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -672,6 +729,57 @@ export type Database = {
           user_id?: string
           workout_name?: string
           workout_type?: string | null
+        }
+        Relationships: []
+      }
+      xp_battles: {
+        Row: {
+          challenger_id: string
+          challenger_xp_current: number
+          challenger_xp_start: number
+          created_at: string
+          ends_at: string
+          id: string
+          opponent_id: string
+          opponent_xp_current: number
+          opponent_xp_start: number
+          starts_at: string
+          status: string
+          updated_at: string
+          winner_id: string | null
+          xp_goal: number
+        }
+        Insert: {
+          challenger_id: string
+          challenger_xp_current?: number
+          challenger_xp_start?: number
+          created_at?: string
+          ends_at?: string
+          id?: string
+          opponent_id: string
+          opponent_xp_current?: number
+          opponent_xp_start?: number
+          starts_at?: string
+          status?: string
+          updated_at?: string
+          winner_id?: string | null
+          xp_goal?: number
+        }
+        Update: {
+          challenger_id?: string
+          challenger_xp_current?: number
+          challenger_xp_start?: number
+          created_at?: string
+          ends_at?: string
+          id?: string
+          opponent_id?: string
+          opponent_xp_current?: number
+          opponent_xp_start?: number
+          starts_at?: string
+          status?: string
+          updated_at?: string
+          winner_id?: string | null
+          xp_goal?: number
         }
         Relationships: []
       }
