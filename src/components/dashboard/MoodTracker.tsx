@@ -13,15 +13,9 @@ const MOODS = [
   { score: 5, emoji: "🤩", label: "Amazing", color: "bg-success/20 text-success border-success/30" },
 ];
 
-const QUICK_TAGS = [
-  "Energized", "Calm", "Anxious", "Focused", "Tired", "Happy",
-  "Stressed", "Motivated", "Grateful", "Restless", "Confident", "Overwhelmed",
-];
+const QUICK_TAGS = ["Energized", "Calm", "Anxious", "Focused", "Tired", "Happy", "Stressed", "Motivated", "Grateful", "Restless", "Confident", "Overwhelmed"];
 
-interface MoodTrackerProps {
-  todayLog: WellnessLog | null;
-  onSave: (data: Partial<WellnessLog>) => Promise<void>;
-}
+interface MoodTrackerProps { todayLog: WellnessLog | null; onSave: (data: Partial<WellnessLog>) => Promise<void>; }
 
 const MoodTracker = ({ todayLog, onSave }: MoodTrackerProps) => {
   const [selectedMood, setSelectedMood] = useState<number>(todayLog?.mood_score || 0);
@@ -29,86 +23,45 @@ const MoodTracker = ({ todayLog, onSave }: MoodTrackerProps) => {
   const [notes, setNotes] = useState(todayLog?.notes || "");
   const [saving, setSaving] = useState(false);
 
-  const toggleTag = (tag: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-    );
-  };
+  const toggleTag = (tag: string) => setSelectedTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
 
   const handleSave = async () => {
     if (!selectedMood) return;
     setSaving(true);
-    await onSave({
-      mood_score: selectedMood,
-      tags: selectedTags,
-      notes: notes || null,
-    });
+    await onSave({ mood_score: selectedMood, tags: selectedTags, notes: notes || null });
     setSaving(false);
   };
 
   return (
-    <Card className="border-primary/10">
+    <Card className="glass">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg flex items-center gap-2">
-          <span className="text-2xl">🧠</span>
-          How are you feeling today?
-        </CardTitle>
+        <CardTitle className="text-lg flex items-center gap-2"><span className="text-2xl">🧠</span>How are you feeling?</CardTitle>
       </CardHeader>
       <CardContent className="space-y-5">
-        {/* Mood Selector */}
         <div className="flex justify-between gap-2">
           {MOODS.map((mood) => (
-            <button
-              key={mood.score}
-              onClick={() => setSelectedMood(mood.score)}
-              className={`flex-1 flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all duration-200 hover:scale-105 ${
-                selectedMood === mood.score
-                  ? mood.color + " scale-105 shadow-md"
-                  : "border-transparent bg-muted/50 hover:bg-muted"
-              }`}
-            >
+            <button key={mood.score} onClick={() => setSelectedMood(mood.score)}
+              className={`flex-1 flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all duration-200 hover:scale-105 ${selectedMood === mood.score ? mood.color + " scale-105 shadow-md" : "border-transparent bg-muted/50 hover:bg-muted"}`}>
               <span className="text-3xl">{mood.emoji}</span>
-              <span className="text-xs font-medium">{mood.label}</span>
+              <span className="text-xs font-semibold">{mood.label}</span>
             </button>
           ))}
         </div>
-
-        {/* Quick Tags */}
         <div>
-          <p className="text-sm font-medium text-muted-foreground mb-2">What's influencing your mood?</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Influencing factors</p>
           <div className="flex flex-wrap gap-2">
             {QUICK_TAGS.map((tag) => (
-              <Badge
-                key={tag}
-                variant={selectedTags.includes(tag) ? "default" : "outline"}
-                className={`cursor-pointer transition-all hover:scale-105 ${
-                  selectedTags.includes(tag) ? "bg-primary text-primary-foreground" : ""
-                }`}
-                onClick={() => toggleTag(tag)}
-              >
-                {tag}
-              </Badge>
+              <Badge key={tag} variant={selectedTags.includes(tag) ? "default" : "outline"}
+                className={`cursor-pointer transition-all hover:scale-105 rounded-lg ${selectedTags.includes(tag) ? "gradient-primary text-white border-0" : ""}`}
+                onClick={() => toggleTag(tag)}>{tag}</Badge>
             ))}
           </div>
         </div>
-
-        {/* Notes */}
         <div>
-          <p className="text-sm font-medium text-muted-foreground mb-2">Journal (optional)</p>
-          <Textarea
-            placeholder="Write about your day, thoughts, or reflections..."
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className="resize-none min-h-[80px]"
-            maxLength={1000}
-          />
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Journal (optional)</p>
+          <Textarea placeholder="Write about your day..." value={notes} onChange={(e) => setNotes(e.target.value)} className="resize-none min-h-[80px] rounded-xl" maxLength={1000} />
         </div>
-
-        <Button
-          onClick={handleSave}
-          disabled={!selectedMood || saving}
-          className="w-full"
-        >
+        <Button onClick={handleSave} disabled={!selectedMood || saving} className="w-full rounded-xl gradient-primary text-white">
           {saving ? "Saving..." : todayLog?.mood_score ? "Update Mood" : "Log Mood"}
         </Button>
       </CardContent>
