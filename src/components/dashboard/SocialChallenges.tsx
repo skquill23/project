@@ -20,109 +20,55 @@ const SocialChallenges = ({ userId }: SocialChallengesProps) => {
 
   useEffect(() => {
     const loadUsers = async () => {
-      const { data } = await supabase
-        .from("leaderboard_profiles")
-        .select("user_id, display_name, avatar_emoji")
-        .neq("user_id", userId);
+      const { data } = await supabase.from("leaderboard_profiles").select("user_id, display_name, avatar_emoji").neq("user_id", userId);
       setAllUsers(data || []);
     };
     loadUsers();
   }, [userId]);
 
-  const handleChallenge = (opponentId: string) => {
-    setChallengeTarget(opponentId);
-    setActiveTab("battles");
-  };
+  const handleChallenge = (opponentId: string) => { setChallengeTarget(opponentId); setActiveTab("battles"); };
 
   if (social.loading) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-64 w-full" />
-        <Skeleton className="h-48 w-full" />
-      </div>
-    );
+    return <div className="space-y-4"><Skeleton className="h-12 w-full rounded-xl" /><Skeleton className="h-64 w-full rounded-xl" /></div>;
   }
 
   return (
     <div className="space-y-6">
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-accent/15 via-primary/10 to-transparent border p-6">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-accent/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+      <div className="relative overflow-hidden rounded-2xl glass p-6">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-accent/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
         <div className="relative">
-          <div className="flex items-center gap-2 mb-2">
-            <Swords className="w-6 h-6 text-accent" />
-            <h2 className="text-xl font-bold">Social Challenges</h2>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-xl gradient-accent flex items-center justify-center glow-accent">
+              <Swords className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-xl font-extrabold tracking-tight">Social Challenges</h2>
           </div>
-          <p className="text-sm text-muted-foreground max-w-md">
-            Connect with friends, compete in head-to-head XP battles, and dominate the activity feed.
-          </p>
-          <div className="flex gap-4 mt-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-primary">{social.friends.length}</p>
-              <p className="text-xs text-muted-foreground">Friends</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-accent">
-                {social.battles.filter((b) => b.status === "active").length}
-              </p>
-              <p className="text-xs text-muted-foreground">Active Battles</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-warning">
-                {social.battles.filter((b) => b.winner_id === userId).length}
-              </p>
-              <p className="text-xs text-muted-foreground">Victories</p>
-            </div>
+          <p className="text-sm text-muted-foreground max-w-md">Connect with friends, compete in XP battles, and dominate the feed.</p>
+          <div className="flex gap-6 mt-4">
+            {[
+              { value: social.friends.length, label: "Friends", color: "text-primary" },
+              { value: social.battles.filter(b => b.status === "active").length, label: "Active", color: "text-accent" },
+              { value: social.battles.filter(b => b.winner_id === userId).length, label: "Wins", color: "text-warning" },
+            ].map(s => (
+              <div key={s.label} className="text-center">
+                <p className={`text-2xl font-extrabold font-mono ${s.color}`}>{s.value}</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{s.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="friends" className="flex items-center gap-1.5">
-            <Users className="w-4 h-4" />
-            <span className="hidden sm:inline">Friends</span>
-          </TabsTrigger>
-          <TabsTrigger value="battles" className="flex items-center gap-1.5">
-            <Swords className="w-4 h-4" />
-            <span className="hidden sm:inline">Battles</span>
-          </TabsTrigger>
-          <TabsTrigger value="feed" className="flex items-center gap-1.5">
-            <Activity className="w-4 h-4" />
-            <span className="hidden sm:inline">Feed</span>
-          </TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 rounded-xl">
+          <TabsTrigger value="friends" className="rounded-lg flex items-center gap-1.5"><Users className="w-4 h-4" /><span className="hidden sm:inline">Friends</span></TabsTrigger>
+          <TabsTrigger value="battles" className="rounded-lg flex items-center gap-1.5"><Swords className="w-4 h-4" /><span className="hidden sm:inline">Battles</span></TabsTrigger>
+          <TabsTrigger value="feed" className="rounded-lg flex items-center gap-1.5"><Activity className="w-4 h-4" /><span className="hidden sm:inline">Feed</span></TabsTrigger>
         </TabsList>
-
-        <TabsContent value="friends" className="mt-4">
-          <FriendsList
-            userId={userId}
-            friends={social.friends}
-            pendingRequests={social.pendingRequests}
-            allUsers={allUsers}
-            onSendRequest={social.sendFriendRequest}
-            onRespondRequest={social.respondToRequest}
-            onRemoveFriend={social.removeFriend}
-            onChallenge={handleChallenge}
-          />
-        </TabsContent>
-
-        <TabsContent value="battles" className="mt-4">
-          <XPBattles
-            userId={userId}
-            battles={social.battles}
-            friends={social.friends}
-            onChallenge={social.challengeFriend}
-            onRespond={social.respondToBattle}
-            initialOpponentId={challengeTarget}
-            onClearInitialOpponent={() => setChallengeTarget(null)}
-          />
-        </TabsContent>
-
-        <TabsContent value="feed" className="mt-4">
-          <ActivityFeed activities={social.activityFeed} userId={userId} />
-        </TabsContent>
+        <TabsContent value="friends" className="mt-4"><FriendsList userId={userId} friends={social.friends} pendingRequests={social.pendingRequests} allUsers={allUsers} onSendRequest={social.sendFriendRequest} onRespondRequest={social.respondToRequest} onRemoveFriend={social.removeFriend} onChallenge={handleChallenge} /></TabsContent>
+        <TabsContent value="battles" className="mt-4"><XPBattles userId={userId} battles={social.battles} friends={social.friends} onChallenge={social.challengeFriend} onRespond={social.respondToBattle} initialOpponentId={challengeTarget} onClearInitialOpponent={() => setChallengeTarget(null)} /></TabsContent>
+        <TabsContent value="feed" className="mt-4"><ActivityFeed activities={social.activityFeed} userId={userId} /></TabsContent>
       </Tabs>
     </div>
   );
