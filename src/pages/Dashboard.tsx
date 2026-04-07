@@ -109,6 +109,7 @@ const Dashboard = () => {
           onTabChange={setActiveTab}
           xp={gamification.xp}
           level={gamification.level}
+          onSignOut={handleSignOut}
         />
         <div className="flex-1 flex flex-col min-w-0">
           <DashboardHeader
