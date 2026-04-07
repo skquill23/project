@@ -62,7 +62,7 @@ const ProfileSetup = ({ userId, onComplete }: ProfileSetupProps) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+    <div className="flex flex-col items-center p-4 py-8 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl" />
       <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-accent/5 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl" />
       <Card className="w-full max-w-2xl glass relative z-10">
