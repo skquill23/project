@@ -83,6 +83,57 @@ export type Database = {
         }
         Relationships: []
       }
+      body_measurements: {
+        Row: {
+          bicep_cm: number | null
+          body_fat_percentage: number | null
+          chest_cm: number | null
+          created_at: string
+          hips_cm: number | null
+          id: string
+          measurement_date: string
+          neck_cm: number | null
+          notes: string | null
+          thigh_cm: number | null
+          updated_at: string
+          user_id: string
+          waist_cm: number | null
+          weight_kg: number | null
+        }
+        Insert: {
+          bicep_cm?: number | null
+          body_fat_percentage?: number | null
+          chest_cm?: number | null
+          created_at?: string
+          hips_cm?: number | null
+          id?: string
+          measurement_date?: string
+          neck_cm?: number | null
+          notes?: string | null
+          thigh_cm?: number | null
+          updated_at?: string
+          user_id: string
+          waist_cm?: number | null
+          weight_kg?: number | null
+        }
+        Update: {
+          bicep_cm?: number | null
+          body_fat_percentage?: number | null
+          chest_cm?: number | null
+          created_at?: string
+          hips_cm?: number | null
+          id?: string
+          measurement_date?: string
+          neck_cm?: number | null
+          notes?: string | null
+          thigh_cm?: number | null
+          updated_at?: string
+          user_id?: string
+          waist_cm?: number | null
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
       daily_challenges: {
         Row: {
           challenge_date: string

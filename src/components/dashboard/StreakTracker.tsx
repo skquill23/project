@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import { Flame, TrendingUp } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Flame } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface StreakTrackerProps {
   userId: string;
@@ -48,28 +47,34 @@ const StreakTracker = ({ userId }: StreakTrackerProps) => {
     return streak;
   };
 
-  if (loading) return <div className="animate-pulse text-sm text-muted-foreground">Loading streaks...</div>;
+  if (loading) return null;
 
   return (
-    <div className="grid gap-3 grid-cols-2">
-      {[
-        { label: "Nutrition", value: nutritionStreak, threshold: 7 },
-        { label: "Workout", value: workoutStreak, threshold: 7 },
-      ].map(s => (
-        <Card key={s.label} className="glass card-hover">
-          <CardContent className="p-4 text-center">
-            <Flame className="w-5 h-5 text-accent mx-auto mb-1" />
-            <p className="text-2xl font-extrabold font-mono">{s.value}</p>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{s.label}</p>
-            {s.value >= s.threshold && (
-              <Badge variant="secondary" className="mt-2 text-[10px]">
-                <TrendingUp className="w-2.5 h-2.5 mr-0.5" /> On Fire!
-              </Badge>
-            )}
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+    <TooltipProvider>
+      <div className="flex items-center gap-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted/50 border border-border/50">
+              <Flame className="w-3.5 h-3.5 text-accent" />
+              <span className="text-xs font-bold font-mono">{nutritionStreak}</span>
+              <span className="text-[10px] text-muted-foreground">meals</span>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent><p>Nutrition streak: {nutritionStreak} days</p></TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted/50 border border-border/50">
+              <Flame className="w-3.5 h-3.5 text-primary" />
+              <span className="text-xs font-bold font-mono">{workoutStreak}</span>
+              <span className="text-[10px] text-muted-foreground">workouts</span>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent><p>Workout streak: {workoutStreak} days</p></TooltipContent>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
   );
 };
 

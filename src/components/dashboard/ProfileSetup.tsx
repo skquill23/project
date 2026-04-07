@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import BodyMeasurements from "./BodyMeasurements";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -121,6 +122,11 @@ const ProfileSetup = ({ userId, onComplete }: ProfileSetupProps) => {
           </form>
         </CardContent>
       </Card>
+
+      {/* Body Measurements Section */}
+      <div className="w-full max-w-2xl relative z-10 mt-6">
+        <BodyMeasurements userId={userId} />
+      </div>
     </div>
   );
 };
