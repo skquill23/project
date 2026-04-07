@@ -55,7 +55,7 @@ const StreakTracker = ({ userId }: StreakTrackerProps) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted/50 border border-border/50">
-              <Flame className="w-3.5 h-3.5 text-orange-500" />
+              <Flame className="w-3.5 h-3.5 text-accent" />
               <span className="text-xs font-bold font-mono">{nutritionStreak}</span>
               <span className="text-[10px] text-muted-foreground">meals</span>
             </div>
